@@ -5,29 +5,31 @@ const fs = require('fs');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Debug: mostrar qué archivos hay en dist/
+// Debug: mostrar estructura completa
 console.log('Contenido de /app/dist:');
 try {
   const distFiles = fs.readdirSync(path.join(__dirname, 'dist'));
   console.log(distFiles);
   
-  // Si hay una subcarpeta, mostrar su contenido también
-  if (distFiles.length > 0) {
-    const subDir = path.join(__dirname, 'dist', distFiles[0]);
-    if (fs.statSync(subDir).isDirectory()) {
-      console.log(`Contenido de ${subDir}:`);
-      console.log(fs.readdirSync(subDir));
-    }
-  }
+  // Mostrar contenido de la subcarpeta
+  const subDir = path.join(__dirname, 'dist', 'prueba-tailwind-angular');
+  console.log('Contenido de prueba-tailwind-angular:');
+  console.log(fs.readdirSync(subDir));
+  
+  // Mostrar contenido de browser
+  const browserDir = path.join(subDir, 'browser');
+  console.log('Contenido de browser:');
+  console.log(fs.readdirSync(browserDir));
+  
 } catch (err) {
-  console.log('Error leyendo dist:', err.message);
+  console.log('Error leyendo directorios:', err.message);
 }
 
-// Servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'dist')));
+// La ruta correcta es dist/prueba-tailwind-angular/browser/
+app.use(express.static(path.join(__dirname, 'dist/prueba-tailwind-angular/browser')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
+  res.sendFile(path.join(__dirname, 'dist/prueba-tailwind-angular/browser/index.html'));
 });
 
 app.listen(port, () => {
